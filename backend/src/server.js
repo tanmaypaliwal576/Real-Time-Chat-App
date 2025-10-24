@@ -7,7 +7,6 @@ import path from "path";
 import { connectdb } from "./lib/db.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
 dotenv.config();
 const app = express();
 const __dirname = path.resolve();
