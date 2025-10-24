@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import generateToken from "../lib/utils.js";
 import { SendWelcomeEmail } from "../emails/emailHandlers.js";
 import dotenv from "dotenv";
-import { cloudinary } from "../config/cloudinary.js";
+import cloudinary from "../lib/cloudinary.js";
 dotenv.config();
 
 export const signup = async (req, res) => {
