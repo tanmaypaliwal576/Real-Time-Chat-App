@@ -1,16 +1,25 @@
 import express from "express";
-import { signup } from "../controllers/auth.controller.js";
+import {
+  signup,
+  login,
+  logout,
+  updateProfile,
+} from "../controllers/auth.controller.js";
+import { ProtectRoute } from "../middleware/auth.middleware.js";
+
 const Router = express.Router();
 
-Router.get("/signup", signup);
+Router.post("/signup", signup);
 
-Router.get("/login", (req, res) => {
-  res.send("login endpoint");
-});
+Router.post("/login", login);
 
-Router.get("/logout", (req, res) => {
-  res.send("logout endpoint");
-});
+Router.post("/logout", logout);
+
+Router.put("/update-profile", ProtectRoute, updateProfile);
+
+Router.get("/check", ProtectRoute, (req, res) => {
+  res.status(200).json(req.user);
+}); //when we refresh authorized user should see same page otherwise it should see signup page
 
 export default Router;
 
