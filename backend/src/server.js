@@ -5,25 +5,39 @@ import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import path from "path";
 import { connectdb } from "./lib/db.js";
+import cors from "cors";
 
-const app = express();
 dotenv.config();
+const app = express();
 const __dirname = path.resolve();
 
-const PORT = process.env.PORT;
-app.use(express.json()); // req.body
+const PORT = 3000; // ✅ Backend stays on port 3000
+
+// ✅ CORS FIRST
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+
+// ✅ JSON Body Parser
+app.use(express.json());
+
+// ✅ Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
-//make ready for deployment
+// ✅ Production serve frontend
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
   app.get("*", (req, res) => {
-    res.send(path.join(__dirname, "../frontend/dist/index.html"));
+    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
   });
 }
 
-app.listen(3000, () => {
-  console.log(`Server is Running on ${PORT}`);
+// ✅ Start Server
+app.listen(PORT, () => {
+  console.log(`✅ Backend server running on port ${PORT}`);
   connectdb();
 });
