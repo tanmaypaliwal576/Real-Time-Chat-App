@@ -6,6 +6,7 @@ import messageRoutes from "./routes/message.route.js";
 import path from "path";
 import { connectdb } from "./lib/db.js";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
@@ -23,7 +24,7 @@ app.use(
 
 // ✅ JSON Body Parser
 app.use(express.json());
-
+app.use(cookieParser());
 // ✅ Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
