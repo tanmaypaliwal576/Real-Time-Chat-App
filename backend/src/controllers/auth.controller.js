@@ -7,11 +7,10 @@ import cloudinary from "../lib/cloudinary.js";
 dotenv.config();
 
 export const signup = async (req, res) => {
-  const { fullname, email, password } = req.body;
-
+  const { fullname, email, password } = req.body; // SIGNUP: (No changes needed, this logic is already correct)
   try {
     if (!fullname || !email || !password)
-      return res.status(400).json({ message: "ALL FIELDS ARE  REQUIRED" });
+      return res.status(400).json({ message: "ALL FIELDS ARE  REQUIRED" });
 
     if (password.length < 6)
       return res
@@ -33,13 +32,6 @@ export const signup = async (req, res) => {
     if (newUser) {
       generateToken(newUser._id, res);
       await newUser.save();
-      res.status(201).json({
-        _id: newUser,
-        fullname: newUser.fullname,
-        email: newUser.email,
-        profilepic: newUser.profilepic,
-      });
-
       try {
         await SendWelcomeEmail(
           newUser.email,
@@ -49,12 +41,19 @@ export const signup = async (req, res) => {
       } catch (error) {
         console.log(error);
       }
+
+      return res.status(201).json({
+        _id: newUser,
+        fullname: newUser.fullname,
+        email: newUser.email,
+        profilepic: newUser.profilepic,
+      });
     } else {
-      res.status(400).json({ message: "INVALID USER DATA" });
+      return res.status(400).json({ message: "INVALID USER DATA" });
     }
   } catch (error) {
     console.log("Error in signup controller: ", error);
-    res.status(500).json({ message: "INTERNAL SERVER ERROR" });
+    return res.status(500).json({ message: "INTERNAL SERVER ERROR" });
   }
 };
 
@@ -66,11 +65,11 @@ export const login = async (req, res) => {
 
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch)
-      return res.status(400).json({ message: "INVALID CREDENTIALS" });
+      return res.status(400).json({ message: "INVALID CREDENTIALS" }); // If an error happens *after* this line, the res.cookie() call has already set headers
 
-    generateToken(user._id, res);
+    generateToken(user._id, res); // This response is sent successfully *only if* generateToken didn't throw an error
 
-    res.status(200).json({
+    return res.status(200).json({
       _id: user._id,
       fullname: user.fullname,
       email: user.email,
@@ -78,13 +77,14 @@ export const login = async (req, res) => {
     });
   } catch (error) {
     console.log("error in login controller", error);
-    res.status(500).json({ message: "INTERNAL SERVER ERROR" });
+    // If an error happens during generateToken or before, we return the 500 error
+    return res.status(500).json({ message: "INTERNAL SERVER ERROR" });
   }
 };
 
 export const logout = (_, res) => {
   res.cookie("jwt", "", { maxAge: 0 });
-  res.status(200).json({ message: "USER LOGGED OUT" });
+  return res.status(200).json({ message: "USER LOGGED OUT" });
 };
 
 export const updateProfile = async (req, res) => {
@@ -104,8 +104,11 @@ export const updateProfile = async (req, res) => {
       { new: true }
     );
 
-    res.status(200).json(updateduser);
+    return res.status(200).json(updateduser);
   } catch (error) {
     console.log("error in update profile controller", error);
+    return res
+      .status(500)
+      .json({ message: "INTERNAL SERVER ERROR during profile update" });
   }
 };

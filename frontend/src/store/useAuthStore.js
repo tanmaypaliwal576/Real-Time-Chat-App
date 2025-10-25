@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
-import { data } from "react-router";
 import toast from "react-hot-toast";
 
 export const useAuthStore = create((set) => ({
@@ -21,31 +20,36 @@ export const useAuthStore = create((set) => ({
     }
   },
 
-  signup: async (formData) => {
+  signup: async (data) => {
     set({ isSigningUp: true });
     try {
-      const res = await axiosInstance.get("/auth/signup", data);
+      // FIX 1: Changed GET to POST for sending signup data (password, email, etc.)
+      const res = await axiosInstance.post("/auth/signup", data);
       set({ authUser: res.data });
 
-      //toast
       toast.success("Account Created Successfully");
     } catch (error) {
-      toast.error("Something went wrong");
+      // FIX 2: Added optional chaining (?.) to prevent crashing on network errors
+      toast.error(
+        error.response?.data?.message || "Signup failed. Check your network."
+      );
     } finally {
       set({ isSigningUp: false });
     }
   },
 
-  login: async (formData) => {
+  login: async (data) => {
     set({ isLoggingIn: true });
     try {
-      const res = await axiosInstance.get("/auth/login", data);
+      const res = await axiosInstance.post("/auth/login", data);
       set({ authUser: res.data });
 
-      //toast
       toast.success("Logged In Successfully");
     } catch (error) {
-      toast.error("Something went wrong");
+      // FIX 2: Added optional chaining (?.) to prevent crashing on network errors
+      toast.error(
+        error.response?.data?.message || "Login failed. Check your network."
+      );
     } finally {
       set({ isLoggingIn: false });
     }
@@ -53,11 +57,14 @@ export const useAuthStore = create((set) => ({
 
   logout: async () => {
     try {
-      await axiosInstance.get("/auth/logout");
+      await axiosInstance.post("/auth/logout");
       set({ authUser: null });
       toast.success("Logged Out Successfully");
     } catch (error) {
-      toast.error("Something went wrong");
+      console.log(error); // FIX 2: Added optional chaining (?.) to prevent crashing on network errors
+      toast.error(
+        error.response?.data?.message || "Logout failed. Check your network."
+      );
     }
   },
 
@@ -67,7 +74,8 @@ export const useAuthStore = create((set) => ({
       set({ authUser: res.data });
       toast.success("Profile Updated Successfully");
     } catch (error) {
-      toast.error("Something went wrong");
+      // FIX 3: Updated to retrieve specific error message from server
+      toast.error(error.response?.data?.message || "Profile update failed.");
     }
   },
 }));
