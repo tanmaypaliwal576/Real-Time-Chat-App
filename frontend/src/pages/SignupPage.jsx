@@ -35,7 +35,7 @@ function SignUpPage() {
                 <div className="text-center mb-6">
                   <MessageCircleIcon className="w-10 h-10 mx-auto text-slate-400 mb-3" />
                   <h2 className="text-2xl font-bold text-slate-200 mb-1">
-                    Create Account
+                    Get Started with Huddle!
                   </h2>
                   <p className="text-slate-400 text-sm">
                     Sign up for a new account
@@ -56,7 +56,7 @@ function SignUpPage() {
                           setFormData({ ...formData, fullname: e.target.value })
                         }
                         className="input"
-                        placeholder="John Doe"
+                        placeholder="Alex Carey"
                       />
                     </div>
                   </div>
@@ -73,7 +73,7 @@ function SignUpPage() {
                           setFormData({ ...formData, email: e.target.value })
                         }
                         className="input"
-                        placeholder="johndoe@gmail.com"
+                        placeholder="alex123@gmail.com"
                       />
                     </div>
                   </div>
@@ -126,7 +126,7 @@ function SignUpPage() {
                   className="w-[80%] h-auto mx-auto object-contain"
                 />
                 <h3 className="text-lg font-medium text-cyan-400 mt-4">
-                  Start Your Journey Today
+                  Ready to connect? Start with Huddle.
                 </h3>
                 <div className="mt-3 flex justify-center gap-3">
                   <span className="auth-badge">Free</span>
