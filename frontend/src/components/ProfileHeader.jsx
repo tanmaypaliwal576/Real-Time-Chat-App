@@ -26,7 +26,9 @@ function ProfileHeader() {
     };
   };
 
-  console.log(authUser.fullName);
+  if (!authUser) return null;
+
+  console.log("authUser in ProfileHeader:", authUser.fullname);
   return (
     <div className="p-6 border-b border-slate-700/50">
       <div className="flex items-center justify-between">
@@ -59,7 +61,7 @@ function ProfileHeader() {
           {/* USERNAME & ONLINE TEXT */}
           <div>
             <h3 className="text-slate-200 font-medium text-base max-w-[180px] truncate">
-              {authUser.fullName}
+              {authUser.fullname}
             </h3>
 
             <p className="text-slate-400 text-xs">Online</p>
