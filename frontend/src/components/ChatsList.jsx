@@ -38,7 +38,7 @@ function ChatsList() {
               </div>
             </div>
             <h4 className="text-slate-200 font-medium truncate">
-              {chat.fullName}
+              {chat.fullname}
             </h4>
           </div>
         </div>
