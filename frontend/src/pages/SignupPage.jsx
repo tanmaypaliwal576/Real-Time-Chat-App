@@ -12,7 +12,7 @@ import { Link } from "react-router";
 
 function SignUpPage() {
   const [formData, setFormData] = useState({
-    fullName: "",
+    fullname: "",
     email: "",
     password: "",
   });
@@ -51,9 +51,9 @@ function SignUpPage() {
                       <UserIcon className="auth-input-icon" />
                       <input
                         type="text"
-                        value={formData.fullName}
+                        value={formData.fullname}
                         onChange={(e) =>
-                          setFormData({ ...formData, fullName: e.target.value })
+                          setFormData({ ...formData, fullname: e.target.value })
                         }
                         className="input"
                         placeholder="John Doe"
