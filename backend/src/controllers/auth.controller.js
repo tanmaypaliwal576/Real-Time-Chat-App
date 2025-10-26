@@ -2,7 +2,12 @@ import generateToken from "../lib/utils.js";
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import cloudinary from "../lib/cloudinary.js";
+import { sendWelcomeEmail } from "../emails/emailHandlers.js";
+import { ENV } from "../lib/env.js";
 
+// =======================================
+// SIGNUP CONTROLLER
+// =======================================
 export const signup = async (req, res) => {
   const { fullname, email, password } = req.body;
 
@@ -15,7 +20,7 @@ export const signup = async (req, res) => {
       return res
         .status(400)
         .json({ message: "Password must be at least 6 characters" });
-    } // check if emailis valid: regex
+    }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
@@ -23,7 +28,7 @@ export const signup = async (req, res) => {
     }
 
     const user = await User.findOne({ email });
-    if (user) return res.status(400).json({ message: "Email already exists" }); // 123456 => $dnjasdkasj_?dmsakmk
+    if (user) return res.status(400).json({ message: "Email already exists" });
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -37,37 +42,38 @@ export const signup = async (req, res) => {
     if (newUser) {
       // Persist user first, then issue auth cookie
       const savedUser = await newUser.save();
-      generateToken(savedUser._id, res); // FIX 1: Add return here to stop execution immediately after success
+      generateToken(savedUser._id, res); // ✅ EMAIL NOTIFICATION LOGIC
+
+      try {
+        // Pass user's email inside an array, and the user's name
+        await sendWelcomeEmail(
+          savedUser.email,
+          savedUser.fullname,
+          ENV.CLIENT_URL
+        );
+      } catch (error) {
+        // Email failure should not block successful registration
+        console.error("Failed to send signup notification email:", error);
+      }
 
       return res.status(201).json({
         _id: newUser._id,
         fullname: newUser.fullname,
         email: newUser.email,
         profilePic: newUser.profilePic,
-      }); // The code below this return will not execute, but that's fine
-      // since the email sending is non-critical and was part of the original error path.
-      // NOTE: You should move the email logic *before* the return, or handle it as a background task.
-      /*
-      try {
-        await sendWelcomeEmail(
-          savedUser.email,
-          savedUser.fullname,
-          ENV.CLIENT_URL
-        );
-      } catch (error) {
-        console.error("Failed to send welcome email:", error);
-      }
-      */
+      });
     } else {
-      // FIX 2: Add return here
       return res.status(400).json({ message: "Invalid user data" });
     }
   } catch (error) {
-    console.log("Error in signup controller:", error); // FIX 3: Add return here
+    console.log("Error in signup controller:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
 
+// =======================================
+// LOGIN CONTROLLER
+// =======================================
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -83,7 +89,7 @@ export const login = async (req, res) => {
     if (!isPasswordCorrect)
       return res.status(400).json({ message: "Invalid credentials" });
 
-    generateToken(user._id, res); // FIX 4: Add return here
+    generateToken(user._id, res);
 
     return res.status(200).json({
       _id: user._id,
@@ -92,26 +98,33 @@ export const login = async (req, res) => {
       profilePic: user.profilePic,
     });
   } catch (error) {
-    console.error("Error in login controller:", error); // FIX 5: Add return here
+    console.error("Error in login controller:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
 
+// =======================================
+// LOGOUT CONTROLLER
+// =======================================
 export const logout = (_, res) => {
-  res.cookie("jwt", "", { maxAge: 0 }); // FIX 6: Add return here
+  res.cookie("jwt", "", { maxAge: 0 });
   return res.status(200).json({ message: "Logged out successfully" });
 };
 
+// =======================================
+// UPDATE PROFILE CONTROLLER
+// =======================================
 export const updateProfile = async (req, res) => {
   try {
     const { profilePic } = req.body;
     if (!profilePic)
-      return res.status(400).json({ message: "Profile pic is required" });
+      return res.status(400).json({ message: "Profile pic is required" }); // Ensure a protection middleware has set req.user
 
     const userId = req.user._id;
 
     const uploadResponse = await cloudinary.uploader.upload(profilePic);
 
+    // Ensure profilePic casing matches your Mongoose Schema
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { profilePic: uploadResponse.secure_url },
@@ -119,10 +132,9 @@ export const updateProfile = async (req, res) => {
     );
     console.log(updatedUser);
 
-    // FIX 7: Add return here
     return res.status(200).json(updatedUser);
   } catch (error) {
-    console.log("Error in update profile:", error); // FIX 8: Add return here
+    console.log("Error in update profile:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
