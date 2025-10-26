@@ -5,23 +5,21 @@ import {
   logout,
   updateProfile,
 } from "../controllers/auth.controller.js";
+import { protectRoute } from "../middleware/auth.middleware.js";
 import { arcjetProtection } from "../middleware/arcjet.middleware.js";
-import { ProtectRoute } from "../middleware/auth.middleware.js";
 
-const Router = express.Router();
-Router.use(arcjetProtection);
-Router.post("/signup", signup);
+const router = express.Router();
 
-Router.post("/login", login);
+router.use(arcjetProtection);
 
-Router.post("/logout", logout);
+router.post("/signup", signup);
+router.post("/login", login);
+router.post("/logout", logout);
 
-Router.put("/update-profile", ProtectRoute, updateProfile);
+router.put("/update-profile", protectRoute, updateProfile);
 
-Router.get("/check", ProtectRoute, (req, res) => {
-  res.status(200).json(req.user);
-}); //when we refresh authorized user should see same page otherwise it should see signup page
+router.get("/check", protectRoute, (req, res) =>
+  res.status(200).json(req.user)
+);
 
-export default Router;
-
-//server -> routes -> controllers
+export default router;
