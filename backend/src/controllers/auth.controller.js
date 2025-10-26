@@ -118,8 +118,10 @@ export const updateProfile = async (req, res) => {
       userId,
       { profilePic: uploadResponse.secure_url },
       { new: true }
-    ); // FIX 7: Add return here
+    );
+    console.log(updatedUser);
 
+    // FIX 7: Add return here
     return res.status(200).json(updatedUser);
   } catch (error) {
     console.log("Error in update profile:", error); // FIX 8: Add return here
