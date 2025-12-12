@@ -18,7 +18,7 @@ https://huddle-tgykr.sevalla.app/
 **Huddle** is a **full-stack real-time chat application** built with:
 
 - **Frontend:** React + Vite  
-- **Styling:** CSS / Tailwind (if used)  
+- **Styling:** Tailwind  
 - **Backend:** Node.js, Express.js  
 - **Real-time Engine:** Socket.IO  
 
