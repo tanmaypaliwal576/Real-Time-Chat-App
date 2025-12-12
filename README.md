@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Real--Time-Chat%20App-blue?style=for-the-badge" />
   <img src="https://img.shields.io/badge/Socket.IO-Working-lightgrey?style=for-the-badge&logo=socketdotio" />
-  <img src="https://img.shields.io/badge/Full--Stack-Project-green?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Full--Stack-MERN%20Style-green?style=for-the-badge" />
 </p>
 
 ---
@@ -15,45 +15,50 @@ https://huddle-tgykr.sevalla.app/
 
 ## 💬 About the Project
 
-**Huddle** is a **full-stack real-time chat application** built using:
+**Huddle** is a **full-stack real-time chat application** built with:
 
-- **Frontend:** HTML, CSS, JavaScript  
+- **Frontend:** React + Vite  
+- **Styling:** CSS / Tailwind (if used)  
 - **Backend:** Node.js, Express.js  
 - **Real-time Engine:** Socket.IO  
 
-The app enables fast, interactive messaging between multiple connected users, with a clean UI and seamless real-time updates.
+The app supports seamless real-time communication, multiple users, and live message broadcasting with a modern UI powered by React.
 
 ---
 
 ## ⭐ Features
 
-### **Real-Time Communication**
-- Messages delivered instantly to all connected users  
-- WebSocket-based event communication  
+### ⚡ Real-Time Messaging  
+- Instant message delivery using Socket.IO  
+- WebSocket-based bi-directional event communication  
+- Auto-updating UI without page reloads  
 
-### **Full-Stack Architecture**
-- Backend handles message routing  
-- Frontend manages UI rendering & interactions  
-
-### **User Experience**
-- Auto-scroll chat window  
+### 🧩 Frontend Features (React + Vite)  
+- Component-based UI  
+- Fast refresh using Vite  
+- Smooth message list rendering  
 - Join/Leave notifications  
-- Unique user identity  
-- Smooth animations  
+- Auto-scroll chat window  
 
-### **Scalable Architecture**
-- Can be extended for authentication  
-- Modular folder structure  
-- Ready for production deployment  
+### 🛠 Backend Features  
+- Express server handling connections  
+- Socket.IO event broadcasting  
+- Modular server architecture  
+- Ready to scale with authentication or rooms  
+
+### 🧱 Scalable Architecture  
+- Frontend & backend separated  
+- Easy to deploy independently  
+- Room for future enhancements  
 
 ---
 
 ## 🛠️ Tech Stack
 
-### **Frontend**
+### **Frontend (React + Vite)**  
 <p>
-  <img src="https://img.shields.io/badge/HTML-005FED?style=for-the-badge&logo=html5&logoColor=white" />
-  <img src="https://img.shields.io/badge/CSS-264DE4?style=for-the-badge&logo=css3&logoColor=white" />
+  <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black"/>
+  <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white"/>
   <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"/>
 </p>
 
@@ -70,20 +75,23 @@ The app enables fast, interactive messaging between multiple connected users, wi
 
 ```
 ├── backend/
+│   ├── server.js            # Express + Socket.IO server
 │   ├── controllers/
-│   ├── models/
 │   ├── routes/
-│   ├── server.js          # Socket.IO + Express server
-│   └── package.json
+│   ├── package.json
+│   └── ...
 │
 ├── frontend/
-│   ├── index.html         # Chat UI
-│   ├── style.css          # UI Styling
-│   ├── app.js             # Client-side Socket.IO logic
-│   └── assets/
+│   ├── src/
+│   │   ├── components/      # Chat UI components
+│   │   ├── pages/
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── index.html
+│   ├── package.json
+│   ├── vite.config.js
+│   └── ...
 │
-├── package.json           # Root configuration (optional)
-├── package-lock.json
 └── README.md
 ```
 
@@ -91,39 +99,40 @@ The app enables fast, interactive messaging between multiple connected users, wi
 
 ## 🧩 How It Works
 
-### **1. Client Connects to Server**
-Socket.IO establishes a persistent WebSocket connection.
+### **1. User connects to server**
+React app connects to backend via Socket.IO client.
 
-### **2. Client Sends a Message**
+### **2. User sends a message**
 ```javascript
 socket.emit("send-message", message);
 ```
 
-### **3. Server Receives & Broadcasts**
+### **3. Server receives & broadcasts**
 ```javascript
 io.emit("receive-message", message);
 ```
 
-### **4. All Connected Users Receive Message**
-Chat updates in real-time, instantly.
+### **4. Frontend updates UI immediately**
+Messages appear instantly for all connected users.
 
 ---
 
-## 🧪 Future Enhancements
+## 🔮 Future Enhancements
 
+- Authentication (JWT)  
 - Private chat rooms  
-- User authentication system  
 - Typing indicators  
-- Online user list  
-- Message persistence via database  
+- Online users list  
+- Message saving using MongoDB  
+- Admin dashboard  
 
 ---
 
 ## 🤝 Contributing  
 Contributions are welcome!  
-Feel free to open an issue or submit a pull request.
+Open an issue or submit a pull request.
 
 ---
 
 ## 📚 License  
-This project is open-source under the MIT License.
+MIT License.
