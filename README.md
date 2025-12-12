@@ -119,11 +119,7 @@ Messages appear instantly for all connected users.
 
 ## 🔮 Future Enhancements
 
-- Authentication (JWT)  
 - Private chat rooms  
-- Typing indicators  
-- Online users list  
-- Message saving using MongoDB  
 - Admin dashboard  
 
 ---
