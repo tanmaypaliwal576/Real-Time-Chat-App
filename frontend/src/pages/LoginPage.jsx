@@ -8,14 +8,27 @@ import {
   LockIcon,
 } from "lucide-react";
 import { Link } from "react-router";
+import toast from "react-hot-toast";
 
 function LoginPage() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const { login, isLoggingIn } = useAuthStore();
 
+  const validateForm = () => {
+    if (!formData.email.trim()) {
+      toast.error("Email is required");
+      return false;
+    }
+    if (!formData.password) {
+      toast.error("Password is required");
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    login(formData);
+    if (validateForm()) login(formData);
   };
 
   return (
