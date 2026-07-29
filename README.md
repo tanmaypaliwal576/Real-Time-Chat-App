@@ -9,7 +9,7 @@
 ---
 
 ## 🚀 Live Demo  
-https://huddle-tgykr.sevalla.app/
+https://huddle-orgg.netlify.app/
 
 ---
 
